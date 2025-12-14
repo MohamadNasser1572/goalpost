@@ -44,6 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->query("UPDATE users SET role = 'admin' WHERE id = $user_id");
     }
 
+    // Demote admin to user (admin-only)
+    elseif ($action == 'demote_admin') {
+        $user_id = intval($_POST['user_id']);
+        // Avoid demoting yourself accidentally (optional safeguard)
+        if ($user_id != $_SESSION['user_id']) {
+            $conn->query("UPDATE users SET role = 'user' WHERE id = $user_id");
+        }
+    }
+
     header("Location: admin_home.php");
     exit();
 }
@@ -52,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $matches = $conn->query("SELECT * FROM matches ORDER BY date_match DESC");
 // Get all regular users to allow promotion
 $users = $conn->query("SELECT id, username, email, role FROM users WHERE role = 'user' ORDER BY created_at DESC");
+// Get all admins to allow demotion
+$admins = $conn->query("SELECT id, username, email, role FROM users WHERE role = 'admin' ORDER BY created_at DESC");
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +175,40 @@ $users = $conn->query("SELECT id, username, email, role FROM users WHERE role = 
                                 <input type="hidden" name="action" value="promote_user">
                                 <input type="hidden" name="user_id" value="<?php echo $u['id']; ?>">
                                 <button type="submit" class="btn-small">Promote to Admin</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Admin Management: Remove Admin -->
+        <div class="table-card" style="margin-top:24px;">
+            <h2>Remove Admin Role</h2>
+            <p class="subtitle">Demote existing admins back to user.</p>
+            <table class="matches-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($a = $admins->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $a['id']; ?></td>
+                        <td><?php echo htmlspecialchars($a['username']); ?></td>
+                        <td><?php echo htmlspecialchars($a['email']); ?></td>
+                        <td><span class="status live">Admin</span></td>
+                        <td>
+                            <form method="POST" style="display:inline;" onsubmit="return confirm('Remove admin role?');">
+                                <input type="hidden" name="action" value="demote_admin">
+                                <input type="hidden" name="user_id" value="<?php echo $a['id']; ?>">
+                                <button type="submit" class="btn-small btn-danger">Remove Admin</button>
                             </form>
                         </td>
                     </tr>

@@ -37,12 +37,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->query("DELETE FROM matches WHERE id = $match_id");
     }
 
+    // Promote user to admin (admin-only)
+    elseif ($action == 'promote_user') {
+        $user_id = intval($_POST['user_id']);
+        // Prevent self-demotion or redundant updates; just set role to admin
+        $conn->query("UPDATE users SET role = 'admin' WHERE id = $user_id");
+    }
+
     header("Location: admin_home.php");
     exit();
 }
 
 // Get all matches
 $matches = $conn->query("SELECT * FROM matches ORDER BY date_match DESC");
+// Get all regular users to allow promotion
+$users = $conn->query("SELECT id, username, email, role FROM users WHERE role = 'user' ORDER BY created_at DESC");
 ?>
 
 <!DOCTYPE html>
@@ -121,6 +130,40 @@ $matches = $conn->query("SELECT * FROM matches ORDER BY date_match DESC");
                                 <input type="hidden" name="action" value="delete_match">
                                 <input type="hidden" name="match_id" value="<?php echo $match['id']; ?>">
                                 <button type="submit" class="btn-small btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- User Management: Promote to Admin -->
+        <div class="table-card" style="margin-top:24px;">
+            <h2>Promote Users to Admin</h2>
+            <p class="subtitle">Only visible to admins. Choose a user to promote.</p>
+            <table class="matches-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($u = $users->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $u['id']; ?></td>
+                        <td><?php echo htmlspecialchars($u['username']); ?></td>
+                        <td><?php echo htmlspecialchars($u['email']); ?></td>
+                        <td><span class="status upcoming">User</span></td>
+                        <td>
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="action" value="promote_user">
+                                <input type="hidden" name="user_id" value="<?php echo $u['id']; ?>">
+                                <button type="submit" class="btn-small">Promote to Admin</button>
                             </form>
                         </td>
                     </tr>

@@ -1,0 +1,11 @@
+# Enable mod_rewrite
+RewriteEngine On
+RewriteBase /GoalPost/
+
+# Prevent direct access to sensitive directories
+RewriteRule ^database/ - [F,L]
+RewriteRule ^includes/ - [F,L]
+
+# Optional: Redirect non-www to www (uncomment if needed)
+# RewriteCond %{HTTP_HOST} !^www\.
+# RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]

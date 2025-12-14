@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Dependencies / vendors
+vendor/
+node_modules/
+
+# Logs
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Build / cache
+.cache/
+/dist/
+
+# XAMPP copies (optional)
+# D:/xampp/htdocs/GoalPost/
+# C:/xampp/htdocs/GoalPost/

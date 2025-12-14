@@ -245,6 +245,27 @@ GoalPost/
 
 ---
 
+## 📸 Screenshots
+
+Add your captures to `assets/screenshots/` and update filenames as needed.
+
+```
+GoalPost/
+└── assets/
+     └── screenshots/
+          ├── login.png
+          ├── admin-dashboard.png
+          ├── user-dashboard.png
+          └── mobile-view.png
+```
+
+![Login](assets/screenshots/login.png)
+![Admin Dashboard](assets/screenshots/admin-dashboard.png)
+![User Dashboard](assets/screenshots/user-dashboard.png)
+![Mobile View](assets/screenshots/mobile-view.png)
+
+---
+
 ## 🎯 Features Breakdown
 
 ### Admin Panel

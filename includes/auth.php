@@ -61,45 +61,6 @@ elseif ($action == 'register') {
     }
 }
 
-elseif ($action == 'register_admin') {
-    $username = $conn->real_escape_string($_POST['username']);
-    $email = $conn->real_escape_string($_POST['email']);
-    $password = $_POST['password'];
-    $confirm = $_POST['confirm_password'];
-    $admin_key = $_POST['admin_key'];
-
-    // Check admin secret key
-    if ($admin_key !== 'GOALPOST2025') {
-        header("Location: ../index.php?error=Invalid admin secret key");
-        exit();
-    }
-
-    if ($password !== $confirm) {
-        header("Location: ../index.php?error=Passwords do not match");
-        exit();
-    }
-
-    if (strlen($password) < 6) {
-        header("Location: ../index.php?error=Password must be at least 6 characters");
-        exit();
-    }
-
-    $check = $conn->query("SELECT id FROM users WHERE username = '$username' OR email = '$email'");
-    if ($check->num_rows > 0) {
-        header("Location: ../index.php?error=Username or email already exists");
-        exit();
-    }
-
-    $hashed = $password;
-    $insert = $conn->query("INSERT INTO users (username, email, password, role) VALUES ('$username', '$email', '$hashed', 'admin')");
-    
-    if ($insert) {
-        header("Location: ../index.php?success=Admin account created! Please login");
-    } else {
-        header("Location: ../index.php?error=Registration failed");
-    }
-}
-
 elseif ($action == 'logout') {
     session_destroy();
     header("Location: ../index.php");

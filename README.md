@@ -274,6 +274,28 @@ GoalPost/
 
 ---
 
+## 🛡️ Admin Access & Roles
+
+- All registrations create standard users (role `user`). The UI no longer offers admin self-signup.
+- To make an admin, promote an existing user manually or via an admin-only action.
+
+Example SQL promotion:
+
+```sql
+UPDATE users SET role = 'admin' WHERE email = 'admin@email.com';
+```
+
+- Admin-only pages should enforce server-side checks (session + role) and return 403 for non-admins.
+- Sample logic:
+
+```php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+     http_response_code(403);
+     die('Access denied');
+}
+```
+
 ## 🎯 Features Breakdown
 
 ### Admin Panel

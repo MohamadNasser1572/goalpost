@@ -14,8 +14,7 @@
             
             <div class="form-tabs">
                 <button class="tab-btn active" onclick="switchTab('login')">Login</button>
-                <button class="tab-btn" onclick="switchTab('register')">Register as User</button>
-                <button class="tab-btn" onclick="switchTab('registerAdmin')">Register as Admin</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
             </div>
 
             <!-- Login Form -->
@@ -33,7 +32,7 @@
                 <p class="demo-text">Admin: admin / admin123 | User: user / user123</p>
             </form>
 
-            <!-- Register as User Form -->
+            <!-- Register Form (users only) -->
             <form id="registerForm" class="form-content" method="POST" action="includes/auth.php">
                 <input type="hidden" name="action" value="register">
                 <div class="form-group">
@@ -52,34 +51,7 @@
                     <label for="reg_confirm">Confirm Password</label>
                     <input type="password" id="reg_confirm" name="confirm_password" required placeholder="Confirm password">
                 </div>
-                <button type="submit" class="btn-submit">Register as User</button>
-            </form>
-
-            <!-- Register as Admin Form -->
-            <form id="registerAdminForm" class="form-content" method="POST" action="includes/auth.php">
-                <input type="hidden" name="action" value="register_admin">
-                <div class="form-group">
-                    <label for="adm_username">Username</label>
-                    <input type="text" id="adm_username" name="username" required placeholder="Choose admin username">
-                </div>
-                <div class="form-group">
-                    <label for="adm_email">Email</label>
-                    <input type="email" id="adm_email" name="email" required placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="adm_password">Password</label>
-                    <input type="password" id="adm_password" name="password" required placeholder="Create password">
-                </div>
-                <div class="form-group">
-                    <label for="adm_confirm">Confirm Password</label>
-                    <input type="password" id="adm_confirm" name="confirm_password" required placeholder="Confirm password">
-                </div>
-                <div class="form-group">
-                    <label for="admin_key">🔑 Admin Secret Key</label>
-                    <input type="password" id="admin_key" name="admin_key" required placeholder="Enter secret admin key">
-                </div>
-                <button type="submit" class="btn-submit">Register as Admin</button>
-                <p class="demo-text" style="font-size: 0.85em; color: #666;">Secret key: GOALPOST2025</p>
+                <button type="submit" class="btn-submit">Register</button>
             </form>
 
             <?php

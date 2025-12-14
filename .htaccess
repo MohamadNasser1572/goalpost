@@ -2,9 +2,13 @@
 RewriteEngine On
 RewriteBase /GoalPost/
 
-# Prevent direct access to sensitive directories
-RewriteRule ^database/ - [F,L]
+# Allow auth endpoint inside includes
+RewriteRule ^includes/auth\.php$ - [L]
+
+# Prevent direct access to sensitive directories (except auth.php)
+RewriteCond %{REQUEST_URI} !^/GoalPost/includes/auth\.php$
 RewriteRule ^includes/ - [F,L]
+RewriteRule ^database/ - [F,L]
 
 # Optional: Redirect non-www to www (uncomment if needed)
 # RewriteCond %{HTTP_HOST} !^www\.

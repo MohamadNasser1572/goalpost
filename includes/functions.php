@@ -1,6 +1,15 @@
 <?php
+// Ensure session cookies are scoped to the app path
+if (!headers_sent()) {
+    ini_set('session.cookie_path', '/GoalPost');
+    session_set_cookie_params([
+        'path' => '/GoalPost',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+}
 // Check session
-if (!isset($_SESSION)) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 

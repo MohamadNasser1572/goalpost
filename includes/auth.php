@@ -1,4 +1,13 @@
 <?php
+// Scope session cookie to the app path before starting the session
+if (!headers_sent()) {
+    ini_set('session.cookie_path', '/GoalPost');
+    session_set_cookie_params([
+        'path' => '/GoalPost',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+}
 session_start();
 require_once '../database/config.php';
 

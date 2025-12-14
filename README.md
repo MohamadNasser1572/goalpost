@@ -260,6 +260,12 @@ GoalPost/
           └── UserDashPhoto.png            # User dashboard
 ```
 
+- GoalPost main page: landing with login and register tabs.
+- Register as admin: admin sign-up form with required fields.
+- Register as user: standard user registration flow.
+- Admin dashboard: manage matches (add, edit, delete) and view table.
+- User dashboard: browse matches and add comments.
+
 ![GoalPost main page](assets/screenshots/GoalPostMainPagePhoto.png)
 ![Register as admin](assets/screenshots/RegAsAdminPhoto.png)
 ![Register as user](assets/screenshots/RegAsUserPhoto.png)

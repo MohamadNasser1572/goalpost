@@ -1,3 +1,10 @@
+<?php
+// Force no-cache in browsers and proxies
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+header('Expires: 0');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +14,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
     <div class="login-container">
@@ -68,7 +75,7 @@
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=3"></script>
     <footer style="text-align:center;margin-top:24px;color:#666;font-size:12px;">
         UI updated: Login + Register only. If you see Admin, you are viewing an old copy.
     </footer>

@@ -247,22 +247,24 @@ GoalPost/
 
 ## 📸 Screenshots
 
-Add your captures to `assets/screenshots/` and update filenames as needed.
+Current captures live in `assets/screenshots/`:
 
 ```
 GoalPost/
 └── assets/
      └── screenshots/
-          ├── login.png
-          ├── admin-dashboard.png
-          ├── user-dashboard.png
-          └── mobile-view.png
+          ├── GoalPostMainPagePhoto.png    # Landing/login
+          ├── RegAsAdminPhoto.png          # Registration as admin
+          ├── RegAsUserPhoto.png           # Registration as user
+          ├── AdminDashPhoto.png           # Admin dashboard
+          └── UserDashPhoto.png            # User dashboard
 ```
 
-![Login](assets/screenshots/login.png)
-![Admin Dashboard](assets/screenshots/admin-dashboard.png)
-![User Dashboard](assets/screenshots/user-dashboard.png)
-![Mobile View](assets/screenshots/mobile-view.png)
+![GoalPost main page](assets/screenshots/GoalPostMainPagePhoto.png)
+![Register as admin](assets/screenshots/RegAsAdminPhoto.png)
+![Register as user](assets/screenshots/RegAsUserPhoto.png)
+![Admin dashboard](assets/screenshots/AdminDashPhoto.png)
+![User dashboard](assets/screenshots/UserDashPhoto.png)
 
 ---
 

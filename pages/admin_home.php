@@ -12,6 +12,12 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'supe
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'] ?? '';
 
+    // Hard block: Only super admins can manage user roles
+    if (in_array($action, ['promote_user', 'demote_admin']) && $_SESSION['role'] !== 'super_admin') {
+        header("Location: admin_home.php?error=Only super admin can manage roles");
+        exit();
+    }
+
     if ($action == 'add_match') {
         $team1 = $conn->real_escape_string($_POST['team1']);
         $team2 = $conn->real_escape_string($_POST['team2']);
@@ -84,6 +90,9 @@ $admins = $conn->query("SELECT id, username, email, role FROM users WHERE role =
     </nav>
 
     <div class="container">
+        <?php if (isset($_GET['error'])): ?>
+            <p class="error-msg"><?php echo htmlspecialchars($_GET['error']); ?></p>
+        <?php endif; ?>
         <h1>Match Management</h1>
 
         <!-- Add Match Form -->

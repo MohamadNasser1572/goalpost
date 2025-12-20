@@ -43,6 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->query("DELETE FROM matches WHERE id = $match_id");
     }
 
+    // Delete a comment (admin or super_admin)
+    elseif ($action == 'delete_comment' && in_array($_SESSION['role'], ['admin','super_admin'])) {
+        $comment_id = intval($_POST['comment_id']);
+        $conn->query("DELETE FROM comments WHERE id = $comment_id");
+    }
+
     // Promote user to admin (super_admin only)
     elseif ($action == 'promote_user' && $_SESSION['role'] === 'super_admin') {
         $user_id = intval($_POST['user_id']);
@@ -68,6 +74,13 @@ $matches = $conn->query("SELECT * FROM matches ORDER BY date_match DESC");
 $users = $conn->query("SELECT id, username, email, role FROM users WHERE role = 'user' ORDER BY created_at DESC");
 // Get all admins to allow demotion
 $admins = $conn->query("SELECT id, username, email, role FROM users WHERE role = 'admin' ORDER BY created_at DESC");
+// Get recent comments for management
+$comments = $conn->query("SELECT c.id, c.comment, c.created_at, u.username, m.id AS match_id, m.team1, m.team2
+                          FROM comments c
+                          JOIN users u ON c.user_id = u.id
+                          JOIN matches m ON c.match_id = m.id
+                          ORDER BY c.created_at DESC
+                          LIMIT 50");
 ?>
 
 <!DOCTYPE html>
@@ -156,6 +169,44 @@ $admins = $conn->query("SELECT id, username, email, role FROM users WHERE role =
                 </tbody>
             </table>
         </div>
+
+        <!-- Comments Management (admins and super admins) -->
+        <?php if (in_array($_SESSION['role'], ['admin','super_admin'])): ?>
+        <div class="table-card" style="margin-top:24px;">
+            <h2>Manage Comments</h2>
+            <p class="subtitle">Admins can remove inappropriate comments.</p>
+            <table class="matches-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Match</th>
+                        <th>User</th>
+                        <th>Comment</th>
+                        <th>Posted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($c = $comments->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $c['id']; ?></td>
+                        <td><?php echo htmlspecialchars($c['team1']) . ' vs ' . htmlspecialchars($c['team2']); ?></td>
+                        <td><?php echo htmlspecialchars($c['username']); ?></td>
+                        <td><?php echo htmlspecialchars($c['comment']); ?></td>
+                        <td><?php echo date('M d, H:i', strtotime($c['created_at'])); ?></td>
+                        <td>
+                            <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this comment?');">
+                                <input type="hidden" name="action" value="delete_comment">
+                                <input type="hidden" name="comment_id" value="<?php echo $c['id']; ?>">
+                                <button type="submit" class="btn-small btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
 
         <?php if ($_SESSION['role'] === 'super_admin'): ?>
         <!-- User Management: Promote to Admin -->

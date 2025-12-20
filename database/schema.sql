@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'user') DEFAULT 'user',
+    role ENUM('user', 'admin', 'super_admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,9 +45,40 @@ VALUES ('admin', 'admin@goalpost.com', 'admin123', 'admin');
 INSERT INTO users (username, email, password, role) 
 VALUES ('user', 'user@goalpost.com', 'user123', 'user');
 
+-- Insert Super Admin (Password: super123)
+INSERT INTO users (username, email, password, role)
+VALUES ('superadmin', 'super@goalpost.com', 'super123', 'super_admin');
+
 -- Insert Sample Matches
 INSERT INTO matches (team1, team2, date_match, status, created_by) 
 VALUES 
 ('Manchester United', 'Liverpool', '2025-12-20 15:00:00', 'upcoming', 1),
 ('Real Madrid', 'Barcelona', '2025-12-21 20:00:00', 'upcoming', 1),
 ('Bayern Munich', 'Borussia Dortmund', '2025-12-22 18:30:00', 'upcoming', 1);
+
+-- Enforce single super_admin with triggers
+DROP TRIGGER IF EXISTS users_before_insert_super_admin;
+DROP TRIGGER IF EXISTS users_before_update_super_admin;
+DELIMITER $$
+CREATE TRIGGER users_before_insert_super_admin
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    IF NEW.role = 'super_admin' THEN
+        IF (SELECT COUNT(*) FROM users WHERE role='super_admin') > 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Only one super_admin allowed';
+        END IF;
+    END IF;
+END$$
+
+CREATE TRIGGER users_before_update_super_admin
+BEFORE UPDATE ON users
+FOR EACH ROW
+BEGIN
+    IF NEW.role = 'super_admin' THEN
+        IF (SELECT COUNT(*) FROM users WHERE role='super_admin' AND id <> OLD.id) > 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Only one super_admin allowed';
+        END IF;
+    END IF;
+END$$
+DELIMITER ;

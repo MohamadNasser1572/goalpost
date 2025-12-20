@@ -11,30 +11,41 @@ if (!headers_sent()) {
 session_start();
 require_once '../database/config.php';
 
-$action = $_POST['action'] ?? $_GET['action'] ?? '';
+$action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
 
 if ($action == 'login') {
-    $username = $conn->real_escape_string($_POST['username']);
-    $password = $_POST['password'];
-
-    $result = $conn->query("SELECT * FROM users WHERE username = '$username'");
+    $username = isset($_POST['username']) ? $_POST['username'] : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
     
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if ($password === $user['password']) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
-            
-            // Redirect based on role (admin and super_admin both go to admin dashboard)
-            $redirect = ($user['role'] == 'admin' || $user['role'] == 'super_admin') ? '../pages/admin_home.php' : '../pages/user_home.php';
-            header("Location: $redirect");
-            exit();
+    if (!empty($username) && !empty($password)) {
+        $username = $conn->real_escape_string($username);
+        $result = $conn->query("SELECT * FROM users WHERE username = '$username'");
+        
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if ($password == $user['password']) {  // Changed === to == for compatibility
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'];
+                
+                // Simple redirect based on role
+                if ($user['role'] == 'admin' || $user['role'] == 'super_admin') {
+                    header("Location: ../pages/admin_home.php");
+                } else {
+                    header("Location: ../pages/user_home.php");
+                }
+                exit();
+            } else {
+                header("Location: ../index.php?error=Invalid password");
+                exit();
+            }
         } else {
-            header("Location: ../index.php?error=Invalid password");
+            header("Location: ../index.php?error=User not found");
+            exit();
         }
     } else {
-        header("Location: ../index.php?error=User not found");
+        header("Location: ../index.php?error=Username and password required");
+        exit();
     }
 }
 

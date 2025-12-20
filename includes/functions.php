@@ -23,7 +23,7 @@ function requireLogin() {
 
 // Redirect to login if not admin
 function requireAdmin() {
-    if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
+    if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'super_admin'])) {
         http_response_code(403);
         die("Access denied");
     }

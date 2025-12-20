@@ -37,19 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->query("DELETE FROM matches WHERE id = $match_id");
     }
 
-    // Promote user to admin (admin-only)
-    elseif ($action == 'promote_user') {
+    // Promote user to admin (super_admin only)
+    elseif ($action == 'promote_user' && $_SESSION['role'] === 'super_admin') {
         $user_id = intval($_POST['user_id']);
-        // Prevent self-demotion or redundant updates; just set role to admin
         $conn->query("UPDATE users SET role = 'admin' WHERE id = $user_id");
     }
 
-    // Demote admin to user (admin-only)
-    elseif ($action == 'demote_admin') {
+    // Demote admin to user (super_admin only)
+    elseif ($action == 'demote_admin' && $_SESSION['role'] === 'super_admin') {
         $user_id = intval($_POST['user_id']);
-        // Avoid demoting yourself accidentally (optional safeguard)
+        // Avoid demoting yourself or other super admins
         if ($user_id != $_SESSION['user_id']) {
-            $conn->query("UPDATE users SET role = 'user' WHERE id = $user_id");
+            $conn->query("UPDATE users SET role = 'user' WHERE id = $user_id AND role != 'super_admin'");
         }
     }
 
@@ -149,10 +148,11 @@ $admins = $conn->query("SELECT id, username, email, role FROM users WHERE role =
             </table>
         </div>
 
+        <?php if ($_SESSION['role'] === 'super_admin'): ?>
         <!-- User Management: Promote to Admin -->
         <div class="table-card" style="margin-top:24px;">
             <h2>Promote Users to Admin</h2>
-            <p class="subtitle">Only visible to admins. Choose a user to promote.</p>
+            <p class="subtitle">Only visible to super admins. Choose a user to promote.</p>
             <table class="matches-table">
                 <thead>
                     <tr>
@@ -216,6 +216,7 @@ $admins = $conn->query("SELECT id, username, email, role FROM users WHERE role =
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </div>
 
     <!-- Edit Modal -->

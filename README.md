@@ -276,17 +276,30 @@ GoalPost/
 
 ## 🛡️ Admin Access & Roles
 
-- All registrations create standard users (role `user`). The UI no longer offers admin self-signup.
-- To make an admin, promote an existing user manually or via an admin-only action.
+**Three-Tier Role System:**
 
-Example SQL promotion:
+| Role          | Can Do                                          |
+| ------------- | ----------------------------------------------- |
+| `user`        | View matches, add comments                      |
+| `admin`       | Manage matches/comments                         |
+| `super_admin` | Manage matches/comments **+ promote/demote users** |
+
+**Setup Instructions:**
+
+1. All registrations create standard users (role `user`)
+2. No public admin/super_admin signup
+3. Create first super admin via SQL:
 
 ```sql
-UPDATE users SET role = 'admin' WHERE email = 'admin@email.com';
+UPDATE users SET role = 'super_admin' WHERE username = 'your_username';
 ```
 
-- Admin-only pages should enforce server-side checks (session + role) and return 403 for non-admins.
-- Sample logic:
+4. Super admins can then promote users to admin via the UI
+
+**Server-Side Validation:**
+- Admin pages check `$_SESSION['role']`
+- User management requires `role === 'super_admin'`
+- Returns 403 Forbidden to unauthorized users
 
 ```php
 session_start();

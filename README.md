@@ -278,10 +278,10 @@ GoalPost/
 
 **Three-Tier Role System:**
 
-| Role          | Can Do                                          |
-| ------------- | ----------------------------------------------- |
-| `user`        | View matches, add comments                      |
-| `admin`       | Manage matches/comments                         |
+| Role          | Can Do                                             |
+| ------------- | -------------------------------------------------- |
+| `user`        | View matches, add comments                         |
+| `admin`       | Manage matches/comments                            |
 | `super_admin` | Manage matches/comments **+ promote/demote users** |
 
 **Setup Instructions:**
@@ -297,6 +297,7 @@ UPDATE users SET role = 'super_admin' WHERE username = 'your_username';
 4. Super admins can then promote users to admin via the UI
 
 **Server-Side Validation:**
+
 - Admin pages check `$_SESSION['role']`
 - User management requires `role === 'super_admin'`
 - Returns 403 Forbidden to unauthorized users

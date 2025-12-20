@@ -26,8 +26,8 @@ if ($action == 'login') {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
             
-            // Redirect based on role
-            $redirect = ($user['role'] == 'admin') ? 'pages/admin_home.php' : 'pages/user_home.php';
+            // Redirect based on role (admin and super_admin both go to admin dashboard)
+            $redirect = ($user['role'] == 'admin' || $user['role'] == 'super_admin') ? 'pages/admin_home.php' : 'pages/user_home.php';
             header("Location: ../$redirect");
             exit();
         } else {

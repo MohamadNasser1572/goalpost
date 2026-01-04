@@ -39,7 +39,6 @@ header('Expires: 0');
                     <input type="password" id="login_password" name="password" required placeholder="Enter password">
                 </div>
                 <button type="submit" class="btn-submit">Login</button>
-                <p class="demo-text">Admin: admin / admin123 | User: user / user123</p>
             </form>
 
             <!-- Register Form (users only) -->

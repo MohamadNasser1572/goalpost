@@ -56,15 +56,15 @@ $matches = $conn->query("SELECT * FROM matches ORDER BY date_match DESC");
                 <div class="match-teams">
                     <div class="team">
                         <h3><?php echo htmlspecialchars($match['team1']); ?></h3>
-                        <?php if ($match['status'] == 'finished' || $match['status'] === 'live'): ?>
-                            <p class="score"><?php echo $match['score_team1']; ?></p>
+                        <?php if ($match['status'] == 'finished' || $match['status'] == 'live'): ?>
+                            <p class="score"><?php echo htmlspecialchars($match['score_team1']); ?></p>
                         <?php endif; ?>
                     </div>
                     <div class="vs">VS</div>
                     <div class="team">
                         <h3><?php echo htmlspecialchars($match['team2']); ?></h3>
-                        <?php if ($match['status'] == 'finished' || $match['status'] === 'live'): ?>
-                            <p class="score"><?php echo $match['score_team2']; ?></p>
+                        <?php if ($match['status'] == 'finished' || $match['status'] == 'live'): ?>
+                            <p class="score"><?php echo htmlspecialchars($match['score_team2']); ?></p>
                         <?php endif; ?>
                     </div>
                 </div>

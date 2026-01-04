@@ -10,11 +10,11 @@ header('Expires: 0');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalPost - Football Community (Updated)</title>
+    <title>GoalPost - Football Community</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="stylesheet" href="assets/css/style.css?v=3">
+    <link rel="stylesheet" href="assets/css/style.css?v=4">
 </head>
 <body>
     <div class="login-container">
@@ -74,9 +74,16 @@ header('Expires: 0');
         </div>
     </div>
 
-    <script src="assets/js/main.js?v=3"></script>
-    <footer style="text-align:center;margin-top:24px;color:#666;font-size:12px;">
-        UI updated: Login + Register only. If you see Admin, you are viewing an old copy.
-    </footer>
+    <script src="assets/js/main.js?v=4"></script>
+    <style>.login-box .demo-text, .login-box footer { display: none !important; }</style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.login-box .demo-text, .login-box footer').forEach(el => el.remove());
+          document.querySelectorAll('.login-box p').forEach(el => {
+            const t = el.textContent || '';
+            if (/admin123|user123|Admin:|User:/i.test(t)) el.remove();
+          });
+        });
+    </script>
 </body>
 </html>

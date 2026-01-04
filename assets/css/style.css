@@ -578,4 +578,10 @@ body {
     .form-row {
         grid-template-columns: 1fr;
     }
+
+    /* Hide any legacy credential hints */
+    .login-box .demo-text,
+    .login-box footer {
+        display: none !important;
+    }
 }
